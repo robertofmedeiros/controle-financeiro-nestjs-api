@@ -16,8 +16,9 @@ export class LancamentosService {
     return this.lancamentosRepository.save(createLancamentoDto);
   }
 
-  findAll() {
+  findAll(query: any) {
     return this.lancamentosRepository.find({
+      where: query,
       order: {
         id: 'ASC',
       },

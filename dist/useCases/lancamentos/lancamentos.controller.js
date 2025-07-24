@@ -18,15 +18,17 @@ const lancamentos_service_1 = require("./lancamentos.service");
 const create_lancamento_dto_1 = require("./dto/create-lancamento.dto");
 const update_lancamento_dto_1 = require("./dto/update-lancamento.dto");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const auth_user_decorator_1 = require("../auth/auth-user.decorator");
 let LancamentosController = class LancamentosController {
     constructor(lancamentosService) {
         this.lancamentosService = lancamentosService;
     }
-    create(createLancamentoDto) {
+    create(createLancamentoDto, usuario) {
+        console.log('>>>', usuario);
         return this.lancamentosService.create(createLancamentoDto);
     }
-    findAll() {
-        return this.lancamentosService.findAll();
+    findAll(query) {
+        return this.lancamentosService.findAll(query);
     }
     findOne(id) {
         return this.lancamentosService.findById(id);
@@ -42,14 +44,16 @@ exports.LancamentosController = LancamentosController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, auth_user_decorator_1.UserContext)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_lancamento_dto_1.CreateLancamentoDto]),
+    __metadata("design:paramtypes", [create_lancamento_dto_1.CreateLancamentoDto, Object]),
     __metadata("design:returntype", void 0)
 ], LancamentosController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], LancamentosController.prototype, "findAll", null);
 __decorate([

@@ -24,8 +24,9 @@ let LancamentosService = class LancamentosService {
     create(createLancamentoDto) {
         return this.lancamentosRepository.save(createLancamentoDto);
     }
-    findAll() {
+    findAll(query) {
         return this.lancamentosRepository.find({
+            where: query,
             order: {
                 id: 'ASC',
             },

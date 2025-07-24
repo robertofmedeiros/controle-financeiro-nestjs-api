@@ -7,11 +7,13 @@ import {
   Delete,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { LancamentosService } from './lancamentos.service';
 import { CreateLancamentoDto } from './dto/create-lancamento.dto';
 import { UpdateLancamentoDto } from './dto/update-lancamento.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserContext } from '../auth/auth-user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('lancamentos')
@@ -19,13 +21,17 @@ export class LancamentosController {
   constructor(private readonly lancamentosService: LancamentosService) {}
 
   @Post()
-  create(@Body() createLancamentoDto: CreateLancamentoDto) {
+  create(
+    @Body() createLancamentoDto: CreateLancamentoDto,
+    @UserContext() usuario: any,
+  ) {
+    console.log('>>>', usuario);
     return this.lancamentosService.create(createLancamentoDto);
   }
 
   @Get()
-  findAll() {
-    return this.lancamentosService.findAll();
+  findAll(@Query() query: any) {
+    return this.lancamentosService.findAll(query);
   }
 
   @Get(':id')
