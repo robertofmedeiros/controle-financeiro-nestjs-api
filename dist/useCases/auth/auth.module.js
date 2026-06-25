@@ -25,7 +25,7 @@ exports.AuthModule = AuthModule = __decorate([
             passport_1.PassportModule,
             jwt_1.JwtModule.register({
                 secret: 'SUA_CHAVE_SECRETA',
-                signOptions: { expiresIn: '30s' },
+                signOptions: { expiresIn: '1d' },
             }),
         ],
         providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],

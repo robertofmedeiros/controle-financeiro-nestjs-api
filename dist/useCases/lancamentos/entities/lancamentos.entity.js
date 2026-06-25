@@ -38,6 +38,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)
 ], Lancamentos.prototype, "created_at", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Lancamentos.prototype, "situacao", void 0);
 exports.Lancamentos = Lancamentos = __decorate([
     (0, typeorm_1.Entity)()
 ], Lancamentos);

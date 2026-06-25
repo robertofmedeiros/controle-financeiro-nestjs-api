@@ -5,4 +5,5 @@ export declare class Lancamentos {
     ano: number;
     valor: number;
     created_at: Date;
+    situacao: 'PENDENTE' | 'PAGO';
 }
