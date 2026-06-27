@@ -8,6 +8,9 @@ async function bootstrap() {
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Example methods
     },
   });
+
+  app.enableCors();
+  
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();
