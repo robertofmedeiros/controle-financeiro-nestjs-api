@@ -22,7 +22,10 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: ['http://192.168.10.9:3000'],
+    origin: [
+      'http://192.168.10.9:3000',
+      /\.trycloudflare\.com$/, // Aceita qualquer subdomínio do trycloudflare.com
+    ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
