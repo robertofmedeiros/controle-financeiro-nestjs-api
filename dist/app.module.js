@@ -14,6 +14,8 @@ const lancamentos_module_1 = require("./useCases/lancamentos/lancamentos.module"
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("./useCases/auth/auth.module");
 const config_1 = require("@nestjs/config");
+const audit_module_1 = require("./useCases/audit/audit.module");
+const typeorm_naming_strategies_1 = require("typeorm-naming-strategies");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,11 +37,13 @@ exports.AppModule = AppModule = __decorate([
                     autoLoadEntities: true,
                     synchronize: configService.get('DB_SYNCHRONIZE'),
                     logging: true,
+                    namingStrategy: new typeorm_naming_strategies_1.SnakeNamingStrategy(),
                 }),
                 inject: [config_1.ConfigService],
             }),
             lancamentos_module_1.LancamentosModule,
             auth_module_1.AuthModule,
+            audit_module_1.AuditModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

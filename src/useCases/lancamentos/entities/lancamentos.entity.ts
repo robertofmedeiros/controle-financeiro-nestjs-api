@@ -1,6 +1,8 @@
+import { Audit } from 'src/useCases/audit/audit.decorator';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
+@Audit()
 export class Lancamentos {
   @PrimaryGeneratedColumn()
   id: number;

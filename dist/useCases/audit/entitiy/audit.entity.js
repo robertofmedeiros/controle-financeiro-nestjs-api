@@ -9,42 +9,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Lancamentos = void 0;
-const audit_decorator_1 = require("../../audit/audit.decorator");
+exports.Audit = void 0;
 const typeorm_1 = require("typeorm");
-let Lancamentos = class Lancamentos {
+let Audit = class Audit {
 };
-exports.Lancamentos = Lancamentos;
+exports.Audit = Audit;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Lancamentos.prototype, "id", void 0);
+], Audit.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Lancamentos.prototype, "descricao", void 0);
+], Audit.prototype, "entityName", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Audit.prototype, "entityId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
-], Lancamentos.prototype, "mes", void 0);
+], Audit.prototype, "userId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'json', nullable: true }),
+    __metadata("design:type", Object)
+], Audit.prototype, "oldState", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'json', nullable: true }),
+    __metadata("design:type", Object)
+], Audit.prototype, "newState", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Lancamentos.prototype, "ano", void 0);
+    __metadata("design:type", String)
+], Audit.prototype, "action", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'double precision' }),
-    __metadata("design:type", Number)
-], Lancamentos.prototype, "valor", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
+    (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], Lancamentos.prototype, "created_at", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Lancamentos.prototype, "situacao", void 0);
-exports.Lancamentos = Lancamentos = __decorate([
-    (0, typeorm_1.Entity)(),
-    (0, audit_decorator_1.Audit)()
-], Lancamentos);
-//# sourceMappingURL=lancamentos.entity.js.map
+], Audit.prototype, "createdAt", void 0);
+exports.Audit = Audit = __decorate([
+    (0, typeorm_1.Entity)()
+], Audit);
+//# sourceMappingURL=audit.entity.js.map

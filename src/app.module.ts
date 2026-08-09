@@ -5,6 +5,8 @@ import { LancamentosModule } from './useCases/lancamentos/lancamentos.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './useCases/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuditModule } from './useCases/audit/audit.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -23,11 +25,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         autoLoadEntities: true, // Carrega entidades sem precisar especifica-las
         synchronize: configService.get('DB_SYNCHRONIZE'), // Sincroniza com o BD. Não deve ser usado em produção
         logging: true,
+        namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [ConfigService],
     }),
     LancamentosModule,
     AuthModule,
+    AuditModule,
   ],
   controllers: [AppController],
   providers: [AppService],

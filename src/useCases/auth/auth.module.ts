@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { JwtStrategy } from './jwt.strategy';
+import { UserContextInterceptor } from './user-context.interceptor';
 
 @Module({
   imports: [
@@ -16,8 +17,8 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, UserContextInterceptor],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, UserContextInterceptor],
 })
 export class AuthModule {}
