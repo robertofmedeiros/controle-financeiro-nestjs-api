@@ -9,36 +9,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuditUserSubscriber = void 0;
+exports.TransactionService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
-const user_context_storage_1 = require("../auth/user-context.storage");
-let AuditUserSubscriber = class AuditUserSubscriber {
+const user_context_storage_1 = require("../../useCases/auth/user-context.storage");
+let TransactionService = class TransactionService {
     constructor(dataSource) {
         this.dataSource = dataSource;
-        this.dataSource.subscribers.push(this);
     }
-    async beforeTransactionStart(event) {
+    async beginTransaction() {
         const store = user_context_storage_1.userContextStorage.getStore();
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        console.log(">>>", store);
         if (store?.userId) {
             try {
-                const currentValue = await event.queryRunner.query("SELECT current_setting('app.current_user_id', true);");
-                if (!currentValue || currentValue[0]?.current_setting === '') {
-                    await event.queryRunner.query("SELECT set_config('app.current_user_id', $1, true);", [store.userId]);
-                }
+                await queryRunner.query("SELECT set_config('app.current_user_id', $1, true);", [store.userId]);
             }
             catch {
             }
         }
+        return queryRunner;
     }
-    listenTo() {
-        return Object;
+    async commitTransaction(queryRunner) {
+        try {
+            await queryRunner.commitTransaction();
+        }
+        finally {
+            await queryRunner.release();
+        }
+    }
+    async rollbackTransaction(queryRunner) {
+        try {
+            await queryRunner.rollbackTransaction();
+        }
+        finally {
+            await queryRunner.release();
+        }
     }
 };
-exports.AuditUserSubscriber = AuditUserSubscriber;
-exports.AuditUserSubscriber = AuditUserSubscriber = __decorate([
+exports.TransactionService = TransactionService;
+exports.TransactionService = TransactionService = __decorate([
     (0, common_1.Injectable)(),
-    (0, typeorm_1.EventSubscriber)(),
     __metadata("design:paramtypes", [typeorm_1.DataSource])
-], AuditUserSubscriber);
-//# sourceMappingURL=audit-user.subscriber.js.map
+], TransactionService);
+//# sourceMappingURL=transaction.service.js.map

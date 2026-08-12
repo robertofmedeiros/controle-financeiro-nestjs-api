@@ -11,7 +11,6 @@ const common_1 = require("@nestjs/common");
 const audit_trigger_service_1 = require("./audit-trigger.service");
 const audit_entity_1 = require("./entitiy/audit.entity");
 const typeorm_1 = require("@nestjs/typeorm");
-const audit_user_subscriber_1 = require("./audit-user.subscriber");
 const user_context_interceptor_1 = require("../auth/user-context.interceptor");
 const core_1 = require("@nestjs/core");
 const auth_module_1 = require("../auth/auth.module");
@@ -26,7 +25,6 @@ exports.AuditModule = AuditModule = __decorate([
         ],
         providers: [
             audit_trigger_service_1.AuditTriggerService,
-            audit_user_subscriber_1.AuditUserSubscriber,
             {
                 provide: core_1.APP_INTERCEPTOR,
                 useClass: user_context_interceptor_1.UserContextInterceptor,

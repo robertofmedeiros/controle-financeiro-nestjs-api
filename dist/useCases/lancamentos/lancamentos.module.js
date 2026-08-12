@@ -12,6 +12,7 @@ const lancamentos_service_1 = require("./lancamentos.service");
 const lancamentos_controller_1 = require("./lancamentos.controller");
 const lancamentos_entity_1 = require("./entities/lancamentos.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const transaction_service_1 = require("../../frameWork/transaction/transaction.service");
 let LancamentosModule = class LancamentosModule {
 };
 exports.LancamentosModule = LancamentosModule;
@@ -19,7 +20,7 @@ exports.LancamentosModule = LancamentosModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([lancamentos_entity_1.Lancamentos])],
         controllers: [lancamentos_controller_1.LancamentosController],
-        providers: [lancamentos_service_1.LancamentosService],
+        providers: [lancamentos_service_1.LancamentosService, transaction_service_1.TransactionService],
         exports: [lancamentos_service_1.LancamentosService],
     })
 ], LancamentosModule);

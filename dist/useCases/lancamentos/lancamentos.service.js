@@ -17,12 +17,23 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const lancamentos_entity_1 = require("./entities/lancamentos.entity");
 const typeorm_2 = require("typeorm");
+const transaction_service_1 = require("../../frameWork/transaction/transaction.service");
 let LancamentosService = class LancamentosService {
-    constructor(lancamentosRepository) {
+    constructor(lancamentosRepository, transactionService) {
         this.lancamentosRepository = lancamentosRepository;
+        this.transactionService = transactionService;
     }
-    create(createLancamentoDto) {
-        return this.lancamentosRepository.save(createLancamentoDto);
+    async create(createLancamentoDto) {
+        const queryRunner = await this.transactionService.beginTransaction();
+        try {
+            const lancamento = await queryRunner.manager.save(lancamentos_entity_1.Lancamentos, createLancamentoDto);
+            await this.transactionService.commitTransaction(queryRunner);
+            return lancamento;
+        }
+        catch (e) {
+            await this.transactionService.rollbackTransaction(queryRunner);
+            throw e;
+        }
     }
     findAll(query) {
         return this.lancamentosRepository.find({
@@ -47,13 +58,21 @@ let LancamentosService = class LancamentosService {
             throw new common_1.BadRequestException('Cliente não encontrado');
         }
         lancamentoResult.id = id;
-        await this.lancamentosRepository
-            .createQueryBuilder()
-            .update(lancamentos_entity_1.Lancamentos)
-            .set(updateLancamentoDto)
-            .where('id = :id', { id })
-            .execute();
-        return await this.findById(id);
+        const queryRunner = await this.transactionService.beginTransaction();
+        try {
+            const lancamento = await queryRunner.manager
+                .createQueryBuilder()
+                .update(lancamentos_entity_1.Lancamentos)
+                .set(updateLancamentoDto)
+                .where('id = :id', { id })
+                .execute();
+            await this.transactionService.commitTransaction(queryRunner);
+            return lancamento;
+        }
+        catch (e) {
+            await this.transactionService.rollbackTransaction(queryRunner);
+            throw e;
+        }
     }
     async remove(id) {
         const lancamentoResult = await this.findById(id);
@@ -67,6 +86,7 @@ exports.LancamentosService = LancamentosService;
 exports.LancamentosService = LancamentosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(lancamentos_entity_1.Lancamentos)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        transaction_service_1.TransactionService])
 ], LancamentosService);
 //# sourceMappingURL=lancamentos.service.js.map

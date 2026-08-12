@@ -1,19 +1,35 @@
+/* eslint-disable prettier/prettier */
+// eslint-disable-next-line prettier/prettier
+
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateLancamentoDto } from './dto/create-lancamento.dto';
 import { UpdateLancamentoDto } from './dto/update-lancamento.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lancamentos } from './entities/lancamentos.entity';
 import { Repository } from 'typeorm';
+import { TransactionService } from '../../frameWork/transaction/transaction.service';
 
 @Injectable()
 export class LancamentosService {
   constructor(
     @InjectRepository(Lancamentos)
     private lancamentosRepository: Repository<Lancamentos>,
+    private readonly transactionService: TransactionService,
   ) {}
 
-  create(createLancamentoDto: CreateLancamentoDto) {
-    return this.lancamentosRepository.save(createLancamentoDto);
+  async create(createLancamentoDto: CreateLancamentoDto) {
+    const queryRunner = await this.transactionService.beginTransaction();
+
+    try {
+      const lancamento = await queryRunner.manager.save(Lancamentos, createLancamentoDto);
+
+      await this.transactionService.commitTransaction(queryRunner);
+
+      return lancamento;
+    } catch (e) {
+      await this.transactionService.rollbackTransaction(queryRunner);
+      throw e;
+    }
   }
 
   findAll(query: any) {
@@ -45,13 +61,23 @@ export class LancamentosService {
 
     lancamentoResult.id = id;
 
-    await this.lancamentosRepository
-      .createQueryBuilder()
-      .update(Lancamentos)
-      .set(updateLancamentoDto)
-      .where('id = :id', { id })
-      .execute();
-    return await this.findById(id);
+    const queryRunner = await this.transactionService.beginTransaction();
+
+    try {
+      const lancamento = await queryRunner.manager
+        .createQueryBuilder()
+        .update(Lancamentos)
+        .set(updateLancamentoDto)
+        .where('id = :id', { id })
+        .execute();
+
+      await this.transactionService.commitTransaction(queryRunner);
+
+      return lancamento;
+    } catch (e) {
+      await this.transactionService.rollbackTransaction(queryRunner);
+      throw e;
+    }
   }
 
   async remove(id: number) {

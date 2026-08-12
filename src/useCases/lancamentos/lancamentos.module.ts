@@ -6,11 +6,12 @@ import { LancamentosService } from './lancamentos.service';
 import { LancamentosController } from './lancamentos.controller';
 import { Lancamentos } from './entities/lancamentos.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TransactionService } from '../../frameWork/transaction/transaction.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Lancamentos])],
   controllers: [LancamentosController],
-  providers: [LancamentosService],
+  providers: [LancamentosService, TransactionService],
   exports: [LancamentosService],
 })
 export class LancamentosModule {}

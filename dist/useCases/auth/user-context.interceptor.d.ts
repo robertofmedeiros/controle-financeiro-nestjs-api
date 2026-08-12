@@ -1,8 +1,5 @@
-import { NestInterceptor, ExecutionContext, CallHandler } from "@nestjs/common";
-import { Observable } from "rxjs";
-import { DataSource } from "typeorm";
+import { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { Observable } from 'rxjs';
 export declare class UserContextInterceptor implements NestInterceptor {
-    private readonly dataSource;
-    constructor(dataSource: DataSource);
     intercept(context: ExecutionContext, next: CallHandler): Observable<any>;
 }
