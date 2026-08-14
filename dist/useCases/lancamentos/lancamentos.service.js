@@ -57,7 +57,8 @@ let LancamentosService = class LancamentosService {
         if (!lancamentoResult) {
             throw new common_1.BadRequestException('Cliente não encontrado');
         }
-        lancamentoResult.id = id;
+        delete updateLancamentoDto['created_at'];
+        delete updateLancamentoDto.id;
         const queryRunner = await this.transactionService.beginTransaction();
         try {
             const lancamento = await queryRunner.manager

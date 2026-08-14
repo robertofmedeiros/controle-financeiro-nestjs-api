@@ -59,7 +59,8 @@ export class LancamentosService {
       throw new BadRequestException('Cliente não encontrado');
     }
 
-    lancamentoResult.id = id;
+    delete updateLancamentoDto['created_at'];
+    delete updateLancamentoDto.id;
 
     const queryRunner = await this.transactionService.beginTransaction();
 
