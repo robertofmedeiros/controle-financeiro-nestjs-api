@@ -1,8 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './frameWork/exceptions/exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   app.use((req, res, next) => {
     console.log(req.method, req.url);
@@ -24,6 +27,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://192.168.10.9:3000',
+      'http://localhost:3000',
       /\.trycloudflare\.com$/, // Aceita qualquer subdomínio do trycloudflare.com
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

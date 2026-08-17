@@ -8,13 +8,17 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserContextInterceptor } from "../auth/user-context.interceptor";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "../auth/auth.module";
+import { AuditController } from "./audit.controller";
+import { AuditService } from "./audit.service";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Audit]),
         AuthModule,
     ],
+    controllers: [AuditController],
     providers: [
+        AuditService,
         AuditTriggerService, 
         {
             provide: APP_INTERCEPTOR,

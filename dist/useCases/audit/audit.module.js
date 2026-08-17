@@ -14,6 +14,8 @@ const typeorm_1 = require("@nestjs/typeorm");
 const user_context_interceptor_1 = require("../auth/user-context.interceptor");
 const core_1 = require("@nestjs/core");
 const auth_module_1 = require("../auth/auth.module");
+const audit_controller_1 = require("./audit.controller");
+const audit_service_1 = require("./audit.service");
 let AuditModule = class AuditModule {
 };
 exports.AuditModule = AuditModule;
@@ -23,7 +25,9 @@ exports.AuditModule = AuditModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([audit_entity_1.Audit]),
             auth_module_1.AuthModule,
         ],
+        controllers: [audit_controller_1.AuditController],
         providers: [
+            audit_service_1.AuditService,
             audit_trigger_service_1.AuditTriggerService,
             {
                 provide: core_1.APP_INTERCEPTOR,
