@@ -5,6 +5,16 @@ import { AllExceptionsFilter } from './frameWork/exceptions/exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: [
+      'http://192.168.10.9:3000',
+      'http://localhost:3000',
+      /\.trycloudflare\.com$/, // Aceita qualquer subdomínio do trycloudflare.com
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  });
+
   app.useGlobalFilters(new AllExceptionsFilter());
 
   app.use((req, res, next) => {
@@ -22,16 +32,6 @@ async function bootstrap() {
     });
   
     next();
-  });
-
-  app.enableCors({
-    origin: [
-      'http://192.168.10.9:3000',
-      'http://localhost:3000',
-      /\.trycloudflare\.com$/, // Aceita qualquer subdomínio do trycloudflare.com
-    ],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    credentials: true,
   });
   
   await app.listen(3010, '0.0.0.0');
