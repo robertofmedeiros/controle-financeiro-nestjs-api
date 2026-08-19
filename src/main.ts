@@ -5,35 +5,40 @@ import { AllExceptionsFilter } from './frameWork/exceptions/exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // 1. Configuração de CORS (DEVE vir antes de outros middlewares)
   app.enableCors({
-    origin: [
-      'http://192.168.10.9:3000',
-      'http://localhost:3000',
-      /\.trycloudflare\.com$/, // Aceita qualquer subdomínio do trycloudflare.com
-    ],
+    origin: (origin, callback) => {
+      // Permite requisições sem origin (como mobile apps, Postman ou cURL)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        'http://192.168.10.9:3000',
+        'http://localhost:3000',
+      ];
+
+      const isCloudflare = /\.trycloudflare\.com$/.test(origin);
+      const isAllowed = allowedOrigins.includes(origin) || isCloudflare;
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Origem não permitida pelo CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
   });
 
+  // 2. Filtros globais
   app.useGlobalFilters(new AllExceptionsFilter());
 
+  // 3. Middlewares de log (opcionais, agora executados com os headers de CORS já tratados)
   app.use((req, res, next) => {
-    console.log(req.method, req.url);
-    console.log('Origin:', req.headers.origin);
+    console.log(`[${req.method}] ${req.url} - Origin: ${req.headers.origin}`);
     next();
   });
 
-  app.use((req, res, next) => {
-    res.on('finish', () => {
-      console.log(
-        'Access-Control-Allow-Origin:',
-        res.getHeader('Access-Control-Allow-Origin'),
-      );
-    });
-  
-    next();
-  });
-  
   await app.listen(3010, '0.0.0.0');
 }
 bootstrap();
