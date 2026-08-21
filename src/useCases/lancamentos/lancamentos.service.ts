@@ -87,6 +87,18 @@ export class LancamentosService {
       throw new BadRequestException('Lançamento não encontrado');
     }
 
-    return lancamentoResult;
+    const queryRunner = await this.transactionService.beginTransaction();
+
+    try {
+      await queryRunner.manager.remove(Lancamentos, lancamentoResult);
+
+      await this.transactionService.commitTransaction(queryRunner);
+    } catch (e) {
+      await this.transactionService.rollbackTransaction(queryRunner);
+
+      throw e;
+    }
+
+    return "Lançamento removido com sucesso!";
   }
 }

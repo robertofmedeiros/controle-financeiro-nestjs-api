@@ -80,7 +80,16 @@ let LancamentosService = class LancamentosService {
         if (!lancamentoResult) {
             throw new common_1.BadRequestException('Lançamento não encontrado');
         }
-        return lancamentoResult;
+        const queryRunner = await this.transactionService.beginTransaction();
+        try {
+            await queryRunner.manager.remove(lancamentos_entity_1.Lancamentos, lancamentoResult);
+            await this.transactionService.commitTransaction(queryRunner);
+        }
+        catch (e) {
+            await this.transactionService.rollbackTransaction(queryRunner);
+            throw e;
+        }
+        return "Lançamento removido com sucesso!";
     }
 };
 exports.LancamentosService = LancamentosService;

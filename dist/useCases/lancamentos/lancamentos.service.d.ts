@@ -11,5 +11,5 @@ export declare class LancamentosService {
     findAll(query: any): Promise<Lancamentos[]>;
     findById(id: number): Promise<Lancamentos>;
     update(id: number, updateLancamentoDto: UpdateLancamentoDto): Promise<import("typeorm").UpdateResult>;
-    remove(id: number): Promise<Lancamentos>;
+    remove(id: number): Promise<string>;
 }
